@@ -8,6 +8,8 @@
 
 ## Installation
 
+**NOTE:** If you need an instance of Orthanc to test against, you can build a ready-to-use Orthanc server VM with the [orthanc-vagrant](https://github.com/chafey/orthanc-vagrant) project.
+
 Add this line to your application's Gemfile:
 
 ```ruby
