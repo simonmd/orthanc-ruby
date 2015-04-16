@@ -6,5 +6,4 @@ require 'plissken'
 require 'orthanc/client'
 
 module Orthanc
-
 end

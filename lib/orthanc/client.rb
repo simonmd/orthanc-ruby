@@ -1,6 +1,11 @@
+require 'orthanc/tools'
+require 'orthanc/plugins'
+require 'orthanc/modalities'
+require 'orthanc/peers'
 require 'orthanc/patients'
 require 'orthanc/studies'
 require 'orthanc/series'
+require 'orthanc/instances'
 
 module Orthanc
   class Client
@@ -62,3 +67,4 @@ module Orthanc
     end
 
   end
+end
