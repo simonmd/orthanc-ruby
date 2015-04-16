@@ -33,6 +33,8 @@ The gem tries to follow the Orthanc API naming scheme as closely as possible, co
 
 You get the picture. 
 
+All implemented resources (for now) can be found in [here](http://www.rubydoc.info/github/simonmd/orthanc-ruby/master/Orthanc/Client)
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
