@@ -61,8 +61,10 @@ module Orthanc
     def objectify(response)
       if JSON.parse(response).class == Array
         return JSON.parse(response)
-      else
+      elsif JSON.parse(response).class == Hash
         return RecursiveOpenStruct.new(JSON.parse(response).to_snake_keys, recurse_over_arrays: true )
+      else
+        return response
       end
     end
 

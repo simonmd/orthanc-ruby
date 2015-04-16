@@ -2,7 +2,7 @@ module Orthanc
   class Client
     # ------------- Patients -------------
     # GET /patients
-    def patients
+    def all_patients
       objectify(base_uri["patients"].get)
     end
 
@@ -78,5 +78,77 @@ module Orthanc
       objectify(base_uri["patients/#{id}/studies"].get)
     end
 
+    # TODO: Polymorphic resourceType resources. Repetitive. must refactor
+
+    # GET /{resourceType}/{id}/attachments
+    def patient_attachments(id)
+      objectify(base_uri["patients/#{id}/attachments"].get)
+    end
+
+    # DELETE /{resourceType}/{id}/attachments/{name}
+    def delete_patient_attachment(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}"].delete)
+    end
+
+    # PUT /{resourceType}/{id}/attachments/{name}
+    def patient_attachment(id, name, payload = {})
+      objectify(base_uri["patients/#{id}/attachments/#{name}"].put(payload))
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/compressed-data
+    def patient_attachment_compressed_data(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/compressed-data"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/compressed-md5
+    def patient_attachment_compressed_md5(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/compressed-md5"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/compressed-size
+    def patient_attachment_compressed_size(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/compressed-size"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/data
+    def patient_attachment_data(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/data"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/md5
+    def patient_attachment_md5(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/md5"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/size
+    def patient_attachment_size(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/size"].get)
+    end
+
+    # POST /{resourceType}/{id}/attachments/{name}/verify-md5
+    def patient_attachment_verify_md5(id, name)
+      objectify(base_uri["patients/#{id}/attachments/#{name}/verify-md5"].get)
+    end
+
+    # GET /{resourceType}/{id}/metadata
+    def patient_all_metadata(id)
+      objectify(base_uri["patients/#{id}/metadata"].get)
+    end
+
+    # GET /{resourceType}/{id}/metadata/{name}
+    def patient_metadata(id, name)
+      objectify(base_uri["patients/#{id}/metadata/#{name}"].get)
+    end
+
+    # DELETE /{resourceType}/{id}/metadata/{name}
+    def patient_delete_metadata(id, name)
+      objectify(base_uri["patients/#{id}/metadata/#{name}"].delete)
+    end
+
+    # PUT /{resourceType}/{id}/metadata/{name}
+    def patient_update_metadata(id, name, payload = {})
+      objectify(base_uri["patients/#{id}/metadata/#{name}"].put(payload))
+    end
+    
   end
 end

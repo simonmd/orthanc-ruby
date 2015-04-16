@@ -9,7 +9,7 @@ module Orthanc
 
     # GET /tools/dicom-conformance
     def tools_dicom_conformance # DICOM conformance statement of this version of Orthanc
-      objectify(base_uri["tools/dicom-conformance"].get)
+      base_uri["tools/dicom-conformance"].get
     end
 
     # POST /tools/execute-script
@@ -29,7 +29,7 @@ module Orthanc
 
     # GET /tools/now
     def tools_now # Returns the current datetime in the ISO 8601 format
-      objectify(base_uri["tools/now"].get)
+      base_uri["tools/now"].get
     end
 
     # POST /tools/reset

@@ -3,7 +3,7 @@ module Orthanc
     # ------------- Instances -------------
 
     # GET /instances
-    def instances
+    def all_instances
       objectify(base_uri["instances"].get)
     end
 
@@ -145,6 +145,78 @@ module Orthanc
     # GET /instances/{id}/tags
     def instance_tags(id) # TODO: "?simplify" argument to simplify output (same as "simplified-tags")
       objectify(base_uri["instances/#{id}/tags"].get)
+    end
+
+    # TODO: Polymorphic resourceType resources. Repetitive. must refactor
+
+    # GET /{resourceType}/{id}/attachments
+    def instance_attachments(id)
+      objectify(base_uri["instances/#{id}/attachments"].get)
+    end
+
+    # DELETE /{resourceType}/{id}/attachments/{name}
+    def delete_instance_attachment(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}"].delete)
+    end
+
+    # PUT /{resourceType}/{id}/attachments/{name}
+    def instance_attachment(id, name, payload = {})
+      objectify(base_uri["instances/#{id}/attachments/#{name}"].put(payload))
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/compressed-data
+    def instance_attachment_compressed_data(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/compressed-data"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/compressed-md5
+    def instance_attachment_compressed_md5(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/compressed-md5"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/compressed-size
+    def instance_attachment_compressed_size(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/compressed-size"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/data
+    def instance_attachment_data(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/data"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/md5
+    def instance_attachment_md5(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/md5"].get)
+    end
+
+    # GET /{resourceType}/{id}/attachments/{name}/size
+    def instance_attachment_size(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/size"].get)
+    end
+
+    # POST /{resourceType}/{id}/attachments/{name}/verify-md5
+    def instance_attachment_verify_md5(id, name)
+      objectify(base_uri["instances/#{id}/attachments/#{name}/verify-md5"].get)
+    end
+
+    # GET /{resourceType}/{id}/metadata
+    def instance_all_metadata(id)
+      objectify(base_uri["instances/#{id}/metadata"].get)
+    end
+
+    # GET /{resourceType}/{id}/metadata/{name}
+    def instance_metadata(id, name)
+      objectify(base_uri["instances/#{id}/metadata/#{name}"].get)
+    end
+
+    # DELETE /{resourceType}/{id}/metadata/{name}
+    def instance_delete_metadata(id, name)
+      objectify(base_uri["instances/#{id}/metadata/#{name}"].delete)
+    end
+
+    # PUT /{resourceType}/{id}/metadata/{name}
+    def instance_update_metadata(id, name, payload = {})
+      objectify(base_uri["instances/#{id}/metadata/#{name}"].put(payload))
     end
 
   end

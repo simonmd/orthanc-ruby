@@ -1,3 +1,5 @@
+lib/.DS_Store
+lib/orthanc/.DS_Store
 /.bundle/
 /.yardoc
 /Gemfile.lock
@@ -7,3 +9,4 @@
 /pkg/
 /spec/reports/
 /tmp/
+*.gem
