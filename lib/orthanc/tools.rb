@@ -4,7 +4,7 @@ module Orthanc
 
     # POST /tools/create-dicom
     def tools_create_dicom(payload = {}) # Create and store a new DICOM instance (experimental)
-      objectify(base_uri["tools/create-dicom"].post(payload))
+      handle_response(base_uri["tools/create-dicom"].post(payload))
     end
 
     # GET /tools/dicom-conformance
@@ -14,17 +14,17 @@ module Orthanc
 
     # POST /tools/execute-script
     def tools_execute_script(payload = {}) # Execute the Lua script in the POST body (experimental)
-      objectify(base_uri["tools/execute-script"].post(payload))
+      handle_response(base_uri["tools/execute-script"].post(payload))
     end
 
     # GET /tools/generate-uid
     def tools_generate_uid(level) # "level" argument among "patient", "study", "series" and "instance"
-      objectify(base_uri["tools/generate-uid"].get({params: {level: level}}))
+      handle_response(base_uri["tools/generate-uid"].get({params: {level: level}}))
     end
 
     # POST /tools/lookup
     def tools_lookup(payload = {}) # Map DICOM UIDs to Orthanc identifiers
-      objectify(base_uri["tools/lookup"].post(payload))
+      handle_response(base_uri["tools/lookup"].post(payload))
     end
 
     # GET /tools/now
@@ -34,7 +34,7 @@ module Orthanc
 
     # POST /tools/reset
     def tools_reset(payload = {}) # Hot restart of Orthanc, the configuration file will be read again
-      objectify(base_uri["tools/reset"].post(payload))
+      handle_response(base_uri["tools/reset"].post(payload))
     end
 
   end

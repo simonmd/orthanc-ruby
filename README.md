@@ -33,9 +33,12 @@ The gem tries to follow the Orthanc API naming scheme as closely as possible, co
     api.system.database_version => 5
     api.statistics.count_studies => 14
 
-You get the picture. 
+You get the picture.
 
-All implemented resources (for now) can be found in [here](http://www.rubydoc.info/github/simonmd/orthanc-ruby/master/Orthanc/Client)
+You can see what Orthanc API resources have been mapped in the gem, and their status [here](https://docs.google.com/spreadsheets/d/1KWQHNGS-NEYppo3XW4TkNbZYk_AraPhWOmSwxcsScvU/edit?usp=sharing)
+
+Basic documentation can be found in [here](http://www.rubydoc.info/github/simonmd/orthanc-ruby/master/Orthanc/Client)
+
 
 
 ## Contributing
