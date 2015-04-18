@@ -1,19 +1,21 @@
 module Orthanc
-  class Client
-    # ------------- Plugins -------------
-    # GET /plugins
-    def plugins # Get the list of all the registered plugins
-      handle_response(base_uri["plugins"].get)
+  class Plugin
+    include Response
+    attr_accessor :base_uri
+
+    def initialize(id = nil)
+      client = Client.new
+      self.base_uri = client.base_uri["/plugins/#{id}"]
     end
 
     # GET /plugins/explorer.js
-    def plugins_explorerjs # Get the JavaScript code that is injected by plugins into Orthanc Explorer
-      handle_response(base_uri["plugins/explorer.js"].get)
+    def explorerjs # Get the JavaScript code that is injected by plugins into Orthanc Explorer
+      handle_response(base_uri["explorer.js"].get)
     end
 
     # GET /plugins/{id}
-    def plugin(id) # Get information about some plugin
-      handle_response(base_uri["plugins/#{id}"].get)
+    def fetch # Get information about some plugin
+      handle_response(base_uri.get)
     end
 
   end

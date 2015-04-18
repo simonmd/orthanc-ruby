@@ -1,40 +1,46 @@
 module Orthanc
-  class Client
-    # ------------- Tools -------------
+  class Tool
+    include Response
+    attr_accessor :base_uri
+
+    def initialize(id = nil)
+      client = Client.new
+      self.base_uri = client.base_uri["tools"]
+    end
 
     # POST /tools/create-dicom
-    def tools_create_dicom(payload = {}) # Create and store a new DICOM instance (experimental)
-      handle_response(base_uri["tools/create-dicom"].post(payload))
+    def create_dicom(payload = {}) # Create and store a new DICOM instance (experimental)
+      handle_response(base_uri["create-dicom"].post(payload))
     end
 
     # GET /tools/dicom-conformance
-    def tools_dicom_conformance # DICOM conformance statement of this version of Orthanc
-      base_uri["tools/dicom-conformance"].get
+    def dicom_conformance # DICOM conformance statement of this version of Orthanc
+      base_uri["dicom-conformance"].get
     end
 
     # POST /tools/execute-script
-    def tools_execute_script(payload = {}) # Execute the Lua script in the POST body (experimental)
-      handle_response(base_uri["tools/execute-script"].post(payload))
+    def execute_script(payload = {}) # Execute the Lua script in the POST body (experimental)
+      handle_response(base_uri["execute-script"].post(payload))
     end
 
     # GET /tools/generate-uid
-    def tools_generate_uid(level) # "level" argument among "patient", "study", "series" and "instance"
-      handle_response(base_uri["tools/generate-uid"].get({params: {level: level}}))
+    def generate_uid(level) # "level" argument among "patient", "study", "series" and "instance"
+      handle_response(base_uri["generate-uid"].get({params: {level: level}}))
     end
 
     # POST /tools/lookup
-    def tools_lookup(payload = {}) # Map DICOM UIDs to Orthanc identifiers
-      handle_response(base_uri["tools/lookup"].post(payload))
+    def lookup(payload = {}) # Map DICOM UIDs to Orthanc identifiers
+      handle_response(base_uri["lookup"].post(payload))
     end
 
     # GET /tools/now
-    def tools_now # Returns the current datetime in the ISO 8601 format
-      base_uri["tools/now"].get
+    def now # Returns the current datetime in the ISO 8601 format
+      base_uri["now"].get
     end
 
     # POST /tools/reset
-    def tools_reset(payload = {}) # Hot restart of Orthanc, the configuration file will be read again
-      handle_response(base_uri["tools/reset"].post(payload))
+    def reset(payload = {}) # Hot restart of Orthanc, the configuration file will be read again
+      handle_response(base_uri["reset"].post(payload))
     end
 
   end

@@ -1,3 +1,5 @@
+require 'orthanc/response'
+
 require 'orthanc/tools'
 require 'orthanc/plugins'
 require 'orthanc/modalities'
@@ -6,13 +8,16 @@ require 'orthanc/patients'
 require 'orthanc/studies'
 require 'orthanc/series'
 require 'orthanc/instances'
+require 'orthanc/attachments'
+require 'orthanc/metadata'
 
 module Orthanc
   class Client
 
+    include Response
     attr_accessor :base_uri
 
-    def initialize(host,port = 8042)
+    def initialize(host = "localhost", port = 8042)
       self.base_uri = RestClient::Resource.new("http://#{host}:#{port}")
     end
 
@@ -41,34 +46,136 @@ module Orthanc
       handle_response(base_uri["exports"].delete({params: params}))
     end
 
+    # ------------- Plugins -------------
 
-    private
-
-    def bool_to_num(bool)
-      return 0 if bool == false
-      return 1 if bool == true
+    def plugins_list
+      handle_response(base_uri["plugins"].get)
     end
 
-    def num_to_bool(num)
-      return false if num == "0"
-      return true if num == "1"
-    end
-
-    def handle_response(response)
-      begin
-        # Try to parse response
-        parsed_response = JSON.parse(response)
-
-        if parsed_response.class == Array
-          return parsed_response
-        elsif parsed_response.class == Hash
-          return RecursiveOpenStruct.new(parsed_response.to_snake_keys, recurse_over_arrays: true )
-        else
-          return response
-        end
-      rescue JSON::ParserError => e # If JSON parse fails, return original response
-        return response
+    def plugins
+      plugins_array = []
+      handle_response(base_uri["plugins"].get).each do |id|
+        plugins_array << Plugin.new(id)
       end
+      return plugins_array
+    end
+
+    def plugin(id)
+      Plugin.new(id)
+    end
+
+    # ------------- Tools -------------
+
+    def tools
+      Tool.new
+    end
+
+    # ------------- Modalities -------------
+
+    def modalities_list
+      handle_response(base_uri["modalities"].get)
+    end
+
+    def modalities
+      modalities_array = []
+      handle_response(base_uri["modalities"].get).each do |id|
+        modalities_array << Modality.new(id)
+      end
+      return modalities_array
+    end
+
+    def modality(dicom)
+      Modality.new(dicom)
+    end
+
+    # ------------- Modalities -------------
+
+    def peers_list
+      handle_response(base_uri["peers"].get)
+    end
+
+    def peers
+      peers_array = []
+      handle_response(base_uri["peers"].get).each do |id|
+        peers_array << Peer.new(id)
+      end
+      return peers_array
+    end
+
+    def peer(peer)
+      Peer.new(peer)
+    end
+
+    # ------------- Patients -------------
+
+    def patients_list
+      handle_response(base_uri["patients"].get)
+    end
+
+    def patients
+      patients_array = []
+      handle_response(base_uri["patients"].get).each do |id|
+        patients_array << Patient.new(id)
+      end
+      return patients_array
+    end
+
+    def patient(id)
+      Patient.new(id)
+    end
+
+    # ------------- Studies -------------
+
+    def studies_list
+      handle_response(base_uri["studies"].get)
+    end
+
+    def studies
+      studies_array = []
+      handle_response(base_uri["studies"].get).each do |id|
+        studies_array << Study.new(id)
+      end
+      return studies_array
+    end
+
+    def study(id)
+      Study.new(id)
+    end
+
+    # ------------- Series -------------
+
+    def series_list
+      handle_response(base_uri["series"].get)
+    end
+
+    def all_series
+      series_array = []
+      handle_response(base_uri["series"].get).each do |id|
+        series_array << Series.new(id)
+      end
+      return series_array
+    end
+
+    def series(id)
+      Series.new(id)
+    end
+
+    # ------------- Instances -------------
+
+    def instances_list
+      handle_response(base_uri["instances"].get)
+    end
+
+    def instances
+      instances_array = []
+      handle_response(base_uri["instances"].get).each do |id|
+        instances_array << Instance.new(id)
+      end
+      return instances_array
+    end
+
+    def instance(id)
+      Instance.new(id)
     end
 
   end

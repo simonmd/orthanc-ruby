@@ -1,141 +1,111 @@
 module Orthanc
-  class Client
-    # ------------- Series -------------
-    # GET /series
-    def all_series # Darn DICOM, why did you have to call them something that's spelled the same singular and plural?
-      handle_response(base_uri["series"].get)
+  class Series
+    include Response
+    attr_accessor :base_uri
+
+    def initialize(id = nil)
+      client = Client.new
+      self.base_uri = client.base_uri["/series/#{id}"]
     end
 
-    # GET /series/{id}
-    def series(id)
-      handle_response(base_uri["series/#{id}"].get)
+    # GET /series, # GET /series/{id}
+    def fetch
+      handle_response(base_uri.get)
     end
 
     # DELETE /series/{id}
-    def delete_series(id)
-      handle_response(base_uri["series/#{id}"].delete)
+    def delete
+      handle_response(base_uri.delete)
     end
 
     # POST /series/{id}/anonymize
-    def anonymize_series(id, payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
-      handle_response(base_uri["series/#{id}/anonymize"].post(payload.to_s))
+    def anonymize(payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
+      handle_response(base_uri["anonymize"].post(payload.to_s))
     end
 
     # GET /series/{id}/archive
-    def archive_series(id) # Create ZIP
-      base_uri["series/#{id}/archive"].get # CAREFUL! Returns the whole zipfile
+    def archive # Create ZIP
+      base_uri["archive"].get # CAREFUL! Returns the whole zipfile
     end
 
     # GET /series/{id}/instances
-    def series_instances(id) # Retrieve all the instances of this patient in a single REST call
-      handle_response(base_uri["series/#{id}/instances"].get)
+    def instances # Retrieve all the instances of this patient in a single REST call
+      handle_response(base_uri["instances"].get)
     end
 
     # GET /series/{id}/media
-    def series_media(id) # Create a ZIP archive for media storage with DICOMDIR
-      base_uri["series/#{id}/media"].get # CAREFUL! Returns the whole zipfile
+    def media # Create a ZIP archive for media storage with DICOMDIR
+      base_uri["media"].get # CAREFUL! Returns the whole zipfile
     end
 
     # POST /series/{id}/modify
-    def modify_series(id, payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
-      handle_response(base_uri["series/#{id}/modify"].post(payload.to_s))
+    def modify(payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
+      handle_response(base_uri["modify"].post(payload.to_s))
     end
 
     # GET /series/{id}/module
-    def series_module(id)
-      handle_response(base_uri["series/#{id}/module"].get)
+    def module
+      handle_response(base_uri["module"].get)
     end
 
     # GET /series/{id}/patient
-    def series_patient(id)
-      handle_response(base_uri["series/#{id}/patient"].get)
+    def patient
+      handle_response(base_uri["patient"].get)
     end
 
     # GET /series/{id}/shared-tags
-    def series_shared_tags(id) # "?simplify" argument to simplify output
-      handle_response(base_uri["series/#{id}/shared-tags"].get)
+    def shared_tags # "?simplify" argument to simplify output
+      handle_response(base_uri["shared-tags"].get)
     end
 
     # GET /series/{id}/statistics
-    def series_statistics(id)
-      handle_response(base_uri["series/#{id}/statistics"].get)
+    def statistics
+      handle_response(base_uri["statistics"].get)
     end
 
     # GET /series/{id}/study
-    def series_study(id)
-      handle_response(base_uri["series/#{id}/study"].get)
+    def study
+      handle_response(base_uri["study"].get)
     end
 
-    # TODO: Polymorphic resourceType resources. Repetitive. must refactor
+    # ---------- Polymorphic resources ----------
+    # Attachments
 
     # GET /{resourceType}/{id}/attachments
-    def series_attachments(id)
-      handle_response(base_uri["series/#{id}/attachments"].get)
+    def attachments_list
+      handle_response(base_uri["attachments"].get)
     end
 
-    # DELETE /{resourceType}/{id}/attachments/{name}
-    def delete_series_attachment(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}"].delete)
+    def attachments
+      attachments_array = []
+      handle_response(base_uri["attachments"].get).each do |id|
+        attachments_array << Attachment.new(base_uri, id)
+      end
+      return attachments_array
     end
 
-    # PUT /{resourceType}/{id}/attachments/{name}
-    def series_attachment(id, name, payload = {})
-      handle_response(base_uri["series/#{id}/attachments/#{name}"].put(payload))
+    def attachment(id)
+      Plugin.new(base_uri, id)
     end
 
-    # GET /{resourceType}/{id}/attachments/{name}/compressed-data
-    def series_attachment_compressed_data(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/compressed-data"].get)
-    end
 
-    # GET /{resourceType}/{id}/attachments/{name}/compressed-md5
-    def series_attachment_compressed_md5(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/compressed-md5"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/compressed-size
-    def series_attachment_compressed_size(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/compressed-size"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/data
-    def series_attachment_data(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/data"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/md5
-    def series_attachment_md5(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/md5"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/size
-    def series_attachment_size(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/size"].get)
-    end
-
-    # POST /{resourceType}/{id}/attachments/{name}/verify-md5
-    def series_attachment_verify_md5(id, name)
-      handle_response(base_uri["series/#{id}/attachments/#{name}/verify-md5"].get)
-    end
+    # Metadata
 
     # GET /{resourceType}/{id}/metadata
-    def series_all_metadata(id)
-      handle_response(base_uri["series/#{id}/metadata"].get)
+    def metadata_list
+      handle_response(base_uri["metadata"].get)
     end
 
-    # GET /{resourceType}/{id}/metadata/{name}
-    def series_metadata(id, name)
-      handle_response(base_uri["series/#{id}/metadata/#{name}"].get)
+    def all_metadata
+      metadata_array = []
+      handle_response(base_uri["metadata"].get).each do |name|
+        metadata_array << Metadata.new(base_uri, name)
+      end
+      return metadata_array
     end
 
-    # DELETE /{resourceType}/{id}/metadata/{name}
-    def series_delete_metadata(id, name)
-      handle_response(base_uri["series/#{id}/metadata/#{name}"].delete)
-    end
-
-    # GET /{resourceType}/{id}/metadata/{name}
-    def series_update_metadata(id, name, payload = {})
-      handle_response(base_uri["series/#{id}/metadata/#{name}"].put(payload))
+    def metadata(name)
+      Metadata.new(base_uri, name)
     end
 
   end

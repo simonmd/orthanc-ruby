@@ -1,29 +1,31 @@
 module Orthanc
-  class Client
-    # ------------- Peers -------------
-    # GET /peers
-    def peers # Get the list of all the registered plugins
-      handle_response(base_uri["peers"].get)
+  class Peer
+    include Response
+    attr_accessor :base_uri
+
+    def initialize(id = nil)
+      client = Client.new
+      self.base_uri = client.base_uri["/peers/#{id}"]
     end
 
-    # GET /peers/{peer}
-    def peer(peer)
-      handle_response(base_uri["peers/#{peer}"].get)
+    # GET /peers, # GET /peers/{id}
+    def fetch
+      handle_response(base_uri.get)
     end
 
-    # DELETE /peers/{peer}
-    def delete_peer(peer)
-      handle_response(base_uri["peers/#{peer}"].delete)
+    # DELETE /peers/{id}
+    def delete
+      handle_response(base_uri.delete)
     end
 
     # PUT /peers/{peer}
-    def modify_peer(peer, payload = {})
-      handle_response(base_uri["peers/#{peer}"].put(payload))
+    def modify(payload = {})
+      handle_response(base_uri.put(payload))
     end
 
     # GET /peers/{peer}/store
-    def peer_store(peer, payload = {}) # POST body = UUID series, UUID instance, or raw DICOM file
-      handle_response(base_uri["peers/#{peer}/store"].post(payload))
+    def store(payload = {}) # POST body = UUID series, UUID instance, or raw DICOM file
+      handle_response(base_uri["store"].post(payload))
     end
 
   end
