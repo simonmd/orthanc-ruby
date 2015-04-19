@@ -52,16 +52,16 @@ module Orthanc
       handle_response(base_uri["plugins"].get)
     end
 
-    def plugins
-      plugins_array = []
-      handle_response(base_uri["plugins"].get).each do |id|
-        plugins_array << Plugin.new(id)
+    def plugins(id = nil)
+      if id
+        return Plugin.new(id)
+      else
+        a = []
+        handle_response(base_uri["plugins"].get).each do |id|
+          a << Plugin.new(id)
+        end
+        return a
       end
-      return plugins_array
-    end
-
-    def plugin(id)
-      Plugin.new(id)
     end
 
     # ------------- Tools -------------
@@ -76,16 +76,16 @@ module Orthanc
       handle_response(base_uri["modalities"].get)
     end
 
-    def modalities
-      modalities_array = []
-      handle_response(base_uri["modalities"].get).each do |id|
-        modalities_array << Modality.new(id)
+    def modalities(dicom = nil)
+      if dicom
+        return Modality.new(dicom)
+      else
+        a = []
+        handle_response(base_uri["modalities"].get).each do |dicom|
+          a << Modality.new(dicom)
+        end
+        return a
       end
-      return modalities_array
-    end
-
-    def modality(dicom)
-      Modality.new(dicom)
     end
 
     # ------------- Modalities -------------
@@ -94,16 +94,16 @@ module Orthanc
       handle_response(base_uri["peers"].get)
     end
 
-    def peers
-      peers_array = []
-      handle_response(base_uri["peers"].get).each do |id|
-        peers_array << Peer.new(id)
+    def peers(peer = nil)
+      if peer
+        return Peer.new(peer)
+      else
+        a = []
+        handle_response(base_uri["peers"].get).each do |peer|
+          a << Peer.new(peer)
+        end
+        return a
       end
-      return peers_array
-    end
-
-    def peer(peer)
-      Peer.new(peer)
     end
 
     # ------------- Patients -------------
@@ -112,16 +112,16 @@ module Orthanc
       handle_response(base_uri["patients"].get)
     end
 
-    def patients
-      patients_array = []
-      handle_response(base_uri["patients"].get).each do |id|
-        patients_array << Patient.new(id)
+    def patients(id = nil)
+      if id
+        return Patient.new(id)
+      else
+        a = []
+        handle_response(base_uri["patients"].get).each do |id|
+          a << Patient.new(id)
+        end
+        return a
       end
-      return patients_array
-    end
-
-    def patient(id)
-      Patient.new(id)
     end
 
     # ------------- Studies -------------
@@ -130,16 +130,16 @@ module Orthanc
       handle_response(base_uri["studies"].get)
     end
 
-    def studies
-      studies_array = []
-      handle_response(base_uri["studies"].get).each do |id|
-        studies_array << Study.new(id)
+    def studies(id = nil)
+      if id
+        return Study.new(id)
+      else
+        a = []
+        handle_response(base_uri["studies"].get).each do |id|
+          a << Study.new(id)
+        end
+        return a
       end
-      return studies_array
-    end
-
-    def study(id)
-      Study.new(id)
     end
 
     # ------------- Series -------------
@@ -148,16 +148,16 @@ module Orthanc
       handle_response(base_uri["series"].get)
     end
 
-    def all_series
-      series_array = []
-      handle_response(base_uri["series"].get).each do |id|
-        series_array << Series.new(id)
+    def series(id = nil)
+      if id
+        return Series.new(id)
+      else
+        a = []
+        handle_response(base_uri["series"].get).each do |id|
+          a << Series.new(id)
+        end
+        return a
       end
-      return series_array
-    end
-
-    def series(id)
-      Series.new(id)
     end
 
     # ------------- Instances -------------
@@ -166,16 +166,16 @@ module Orthanc
       handle_response(base_uri["instances"].get)
     end
 
-    def instances
-      instances_array = []
-      handle_response(base_uri["instances"].get).each do |id|
-        instances_array << Instance.new(id)
+    def instances(id = nil)
+      if id
+        return Instance.new(id)
+      else
+        a = []
+        handle_response(base_uri["instances"].get).each do |id|
+          a << Instance.new(id)
+        end
+        return a
       end
-      return instances_array
-    end
-
-    def instance(id)
-      Instance.new(id)
     end
 
   end

@@ -39,7 +39,7 @@ module Orthanc
     end
 
     # POST /patients/{id}/modify
-    def modify_patient(payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
+    def modify(payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
       handle_response(base_uri["modify"].post(payload.to_s))
     end
 
@@ -49,12 +49,12 @@ module Orthanc
     end
 
     # GET /patients/{id}/protected
-    def is_protected? # Protection against recycling: "0" means unprotected, "1" protected
+    def protected? # Protection against recycling: "0" means unprotected, "1" protected
       num_to_bool(base_uri["protected"].get)
     end
 
     # PUT /patients/{id}/protected
-    def set_protected(boolstatus = true) # Protection against recycling: "0" means unprotected, "1" protected
+    def protected(boolstatus = true) # Protection against recycling: "0" means unprotected, "1" protected
       status = bool_to_num(boolstatus)
       base_uri["protected"].put("#{status}")
       return nil # API returns ""
@@ -66,8 +66,8 @@ module Orthanc
     end
 
     # GET /patients/{id}/shared-tags
-    def shared_tags # "?simplify" argument to simplify output
-      handle_response(base_uri["shared-tags"].get)
+    def shared_tags(params = {}) # "?simplify" argument to simplify output
+      handle_response(base_uri["shared-tags"].get({params: params}))
     end
 
     # GET /patients/{id}/statistics
@@ -88,18 +88,17 @@ module Orthanc
       handle_response(base_uri["attachments"].get)
     end
 
-    def attachments
-      attachments_array = []
-      handle_response(base_uri["attachments"].get).each do |id|
-        attachments_array << Attachment.new(base_uri, id)
+    def attachments(id = nil)
+      if id
+        return Attachment.new(base_uri, id)
+      else
+        a = []
+        handle_response(base_uri["attachments"].get).each do |id|
+          a << Attachment.new(base_uri, id)
+        end
+        return a
       end
-      return attachments_array
     end
-
-    def attachment(id)
-      Plugin.new(base_uri, id)
-    end
-
 
     # Metadata
 
@@ -108,16 +107,16 @@ module Orthanc
       handle_response(base_uri["metadata"].get)
     end
 
-    def all_metadata
-      metadata_array = []
-      handle_response(base_uri["metadata"].get).each do |name|
-        metadata_array << Metadata.new(base_uri, name)
+    def metadata(name = nil)
+      if name
+        return Metadata.new(base_uri, name)
+      else
+        a = []
+        handle_response(base_uri["metadata"].get).each do |name|
+          a << Metadata.new(base_uri, name)
+        end
+        return a
       end
-      return metadata_array
-    end
-
-    def metadata(name)
-      Metadata.new(base_uri, name)
     end
 
   end

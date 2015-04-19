@@ -124,8 +124,8 @@ module Orthanc
     end
 
     # GET /instances/{id}/simplified-tags
-    def simplified_tags # "?simplify" argument to simplify output
-      handle_response(base_uri["simplified-tags"].get)
+    def simplified_tags(params = {}) # "?simplify" argument to simplify output
+      handle_response(base_uri["simplified-tags"].get({params: params}))
     end
 
     # GET /instances/{id}/statistics
@@ -139,8 +139,8 @@ module Orthanc
     end
 
     # GET /instances/{id}/tags
-    def tags # TODO: "?simplify" argument to simplify output (same as "simplified-tags")
-      handle_response(base_uri["tags"].get)
+    def tags(params = {}) # TODO: "?simplify" argument to simplify output (same as "simplified-tags")
+      handle_response(base_uri["tags"].get({params: params}))
     end
 
     # ---------- Polymorphic resources ----------
@@ -151,18 +151,17 @@ module Orthanc
       handle_response(base_uri["attachments"].get)
     end
 
-    def attachments
-      attachments_array = []
-      handle_response(base_uri["attachments"].get).each do |id|
-        attachments_array << Attachment.new(base_uri, id)
+    def attachments(id = nil)
+      if id
+        return Attachment.new(base_uri, id)
+      else
+        a = []
+        handle_response(base_uri["attachments"].get).each do |id|
+          a << Attachment.new(base_uri, id)
+        end
+        return a
       end
-      return attachments_array
     end
-
-    def attachment(id)
-      Plugin.new(base_uri, id)
-    end
-
 
     # Metadata
 
@@ -171,16 +170,16 @@ module Orthanc
       handle_response(base_uri["metadata"].get)
     end
 
-    def all_metadata
-      metadata_array = []
-      handle_response(base_uri["metadata"].get).each do |name|
-        metadata_array << Metadata.new(base_uri, name)
+    def metadata(name = nil)
+      if name
+        return Metadata.new(base_uri, name)
+      else
+        a = []
+        handle_response(base_uri["metadata"].get).each do |name|
+          a << Metadata.new(base_uri, name)
+        end
+        return a
       end
-      return metadata_array
-    end
-
-    def metadata(name)
-      Metadata.new(base_uri, name)
     end
 
   end
