@@ -22,37 +22,47 @@ module Orthanc
     end
 
     # ------------- General -------------
+
+    # GET /system
     def system
       handle_response(base_uri["system"].get)
     end
 
+    # GET /statistics
     def statistics
       handle_response(base_uri["statistics"].get)
     end
 
+    # GET /changes
     def changes(params = {}) # "last", "limit" and "since" arguments
       handle_response(base_uri["changes"].get({params: params}))
     end
 
+    # DELETE /changes
     def delete_changes(params = {}) # "last", "limit" and "since" arguments
       handle_response(base_uri["changes"].delete({params: params}))
     end
 
+    # GET /exports
     def exports(params = {}) # "last", "limit" and "since" arguments
       handle_response(base_uri["exports"].get({params: params}))
     end
 
+    # DELETE /exports
     def delete_exports(params = {}) # "last", "limit" and "since" arguments
       handle_response(base_uri["exports"].delete({params: params}))
     end
 
+
     # ------------- Plugins -------------
 
-    def plugins_list
+    # GET /plugins
+    def plugins_list # Orthanc endpoint response
       handle_response(base_uri["plugins"].get)
     end
 
-    def plugins(id = nil)
+    # GET /plugins
+    def plugins(id = nil) # As class instances, for method chaining
       if id
         return Plugin.new(id)
       else
@@ -64,19 +74,22 @@ module Orthanc
       end
     end
 
+
     # ------------- Tools -------------
 
+    # GET /tools
     def tools
       Tool.new
     end
 
+
     # ------------- Modalities -------------
 
-    def modalities_list
+    def modalities_list # Orthanc endpoint response
       handle_response(base_uri["modalities"].get)
     end
 
-    def modalities(dicom = nil)
+    def modalities(dicom = nil) # As class instances, for method chaining
       if dicom
         return Modality.new(dicom)
       else
@@ -88,13 +101,14 @@ module Orthanc
       end
     end
 
+
     # ------------- Modalities -------------
 
-    def peers_list
+    def peers_list # Orthanc endpoint response
       handle_response(base_uri["peers"].get)
     end
 
-    def peers(peer = nil)
+    def peers(peer = nil) # As class instances, for method chaining
       if peer
         return Peer.new(peer)
       else
@@ -106,13 +120,14 @@ module Orthanc
       end
     end
 
+
     # ------------- Patients -------------
 
-    def patients_list
+    def patients_list # Orthanc endpoint response
       handle_response(base_uri["patients"].get)
     end
 
-    def patients(id = nil)
+    def patients(id = nil) # As class instances, for method chaining
       if id
         return Patient.new(id)
       else
@@ -124,13 +139,14 @@ module Orthanc
       end
     end
 
+
     # ------------- Studies -------------
 
-    def studies_list
+    def studies_list # Orthanc endpoint response
       handle_response(base_uri["studies"].get)
     end
 
-    def studies(id = nil)
+    def studies(id = nil) # As class instances, for method chaining
       if id
         return Study.new(id)
       else
@@ -142,13 +158,14 @@ module Orthanc
       end
     end
 
+
     # ------------- Series -------------
 
-    def series_list
+    def series_list # Orthanc endpoint response
       handle_response(base_uri["series"].get)
     end
 
-    def series(id = nil)
+    def series(id = nil) # As class instances, for method chaining
       if id
         return Series.new(id)
       else
@@ -160,13 +177,14 @@ module Orthanc
       end
     end
 
+
     # ------------- Instances -------------
 
-    def instances_list
+    def instances_list # Orthanc endpoint response
       handle_response(base_uri["instances"].get)
     end
 
-    def instances(id = nil)
+    def instances(id = nil) # As class instances, for method chaining
       if id
         return Instance.new(id)
       else

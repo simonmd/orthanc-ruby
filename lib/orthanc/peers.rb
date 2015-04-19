@@ -9,7 +9,7 @@ module Orthanc
     end
 
     # GET /peers, # GET /peers/{id}
-    def fetch
+    def fetch # Fetch API response
       handle_response(base_uri.get)
     end
 

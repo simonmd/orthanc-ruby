@@ -9,7 +9,7 @@ module Orthanc
     end
 
     # GET /modalities, # GET /modalities/{id}
-    def fetch
+    def fetch # Fetch API response
       handle_response(base_uri.get)
     end
 

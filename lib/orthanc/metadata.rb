@@ -8,7 +8,7 @@ module Orthanc
     end
 
     # GET /{resourceType}/{id}/metadata/{name}
-    def fetch
+    def fetch # Fetch API response
       handle_response(base_uri.get)
     end
 

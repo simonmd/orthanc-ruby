@@ -14,7 +14,7 @@ module Orthanc
     end
 
     # GET /plugins/{id}
-    def fetch # Get information about some plugin
+    def fetch  # Fetch API response
       handle_response(base_uri.get)
     end
 

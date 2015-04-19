@@ -9,7 +9,7 @@ module Orthanc
     end
 
     # GET /instances, # GET /instances/{id}
-    def fetch
+    def fetch # Fetch API response
       handle_response(base_uri.get)
     end
 
@@ -147,7 +147,7 @@ module Orthanc
     # Attachments
 
     # GET /{resourceType}/{id}/attachments
-    def attachments_list
+    def attachments_list # Orthanc endpoint response
       handle_response(base_uri["attachments"].get)
     end
 
@@ -166,11 +166,11 @@ module Orthanc
     # Metadata
 
     # GET /{resourceType}/{id}/metadata
-    def metadata_list
+    def metadata_list # Orthanc endpoint response
       handle_response(base_uri["metadata"].get)
     end
 
-    def metadata(name = nil)
+    def metadata(name = nil) # As class instances, for method chaining
       if name
         return Metadata.new(base_uri, name)
       else
