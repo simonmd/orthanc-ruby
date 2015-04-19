@@ -1,10 +1,17 @@
 # Orthanc-ruby
 
-##### A Ruby implementation of the [Orthanc](http://orthanc-server.com) DICOM server v0.8.6 REST API
+#### A Ruby implementation of the [Orthanc](http://orthanc-server.com) DICOM server v0.8.6 REST API
 
-##### Extremely Alpha!! Not ready for production. Anything may change, including resource nesting and naming schemes.
+---
 
-(This is my first API client gem, experienced help or advice would be most appreciated) :)
+**Alpha!! Not ready for production. Anything may change, including resource nesting and naming schemes.**
+
+---
+
+###Attention: The gem now implements the orthanc resources as multilevel methods, to make it more Ruby-like
+
+_(This is my first API client gem, experienced help or advice would be most appreciated)_ :)
+
 
 ## Installation
 
@@ -28,8 +35,12 @@ Or install it yourself as:
 The gem tries to follow the Orthanc API naming scheme as closely as possible, converting methods and response items to snake case to make the experience more ruby-like.
 
     api=Orthanc::Client.new("localhost", "8042")
-    api.all_patients
-    api.all_patients.first
+    api.patients # All patients as instances for method chaining
+    api.patients_list # Patient array, from Orthanc response
+    pat = api.patients.first # First patient (instance)
+
+  pat.shared_tags(simplify:true) # Patient's shared tags (simplified)
+
     api.system.database_version => 5
     api.statistics.count_studies => 14
 
@@ -39,7 +50,13 @@ You can see what Orthanc API resources have been mapped in the gem, and their st
 
 Basic documentation can be found in [here](http://www.rubydoc.info/github/simonmd/orthanc-ruby/master/Orthanc/Client)
 
+## Backlog
 
+ - Methods that return a file should be handled by ruby
+ - Test attachments (not sure how they are implemented in Orthanc)
+ - Handle network errors, return false if 500 Server error? (eg. echo)
+ - Test peers
+ - Write automated tests
 
 ## Contributing
 

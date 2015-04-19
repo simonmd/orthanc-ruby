@@ -1,146 +1,115 @@
 module Orthanc
-  class Client
-    # ------------- Studies -------------
-    # GET /studies
-    def all_studies
-      handle_response(base_uri["studies"].get)
+  class Study
+    include Response
+    attr_accessor :base_uri
+
+    def initialize(id = nil)
+      client = Client.new
+      self.base_uri = client.base_uri["/studies/#{id}"]
     end
 
-    # GET /studies/{id}
-    def study(id)
-      handle_response(base_uri["studies/#{id}"].get)
+    # GET /studies, # GET /studies/{id}
+    def fetch # Fetch API response
+      handle_response(base_uri.get)
     end
 
     # DELETE /studies/{id}
-    def delete_study(id)
-      handle_response(base_uri["studies/#{id}"].delete)
+    def delete
+      handle_response(base_uri.delete)
     end
 
     # POST /studies/{id}/anonymize
-    def anonymize_study(id, payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
-      handle_response(base_uri["studies/#{id}/anonymize"].post(payload.to_s))
+    def anonymize(payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
+      handle_response(base_uri["anonymize"].post(payload.to_s))
     end
 
     # GET /studies/{id}/archive
-    def archive_study(id) # Create ZIP
-      base_uri["studies/#{id}/archive"].get # CAREFUL! Returns the whole zipfile
+    def archive # Create ZIP
+      base_uri["archive"].get # CAREFUL! Returns the whole zipfile
     end
 
     # GET /studies/{id}/instances
-    def study_instances(id) # Retrieve all the instances of this patient in a single REST call
-      handle_response(base_uri["studies/#{id}/instances"].get)
+    def instances # Retrieve all the instances of this patient in a single REST call
+      handle_response(base_uri["instances"].get)
     end
 
     # GET /studies/{id}/media
-    def study_media(id) # Create a ZIP archive for media storage with DICOMDIR
-      base_uri["studies/#{id}/media"].get # CAREFUL! Returns the whole zipfile
+    def media # Create a ZIP archive for media storage with DICOMDIR
+      base_uri["media"].get # CAREFUL! Returns the whole zipfile
     end
 
     # POST /studies/{id}/modify
-    def modify_study(id, payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
-      handle_response(base_uri["studies/#{id}/modify"].post(payload.to_s))
+    def modify(payload = {}) # https://code.google.com/p/orthanc/wiki/Anonymization
+      handle_response(base_uri["modify"].post(payload.to_s))
     end
 
     # GET /studies/{id}/module
-    def study_module(id)
-      handle_response(base_uri["studies/#{id}/module"].get)
+    def module
+      handle_response(base_uri["module"].get)
     end
 
     # GET /studies/{id}/module-patient
-    def study_module_patient(id)
-      handle_response(base_uri["studies/#{id}/module-patient"].get)
+    def module_patient
+      handle_response(base_uri["module-patient"].get)
     end
 
     # GET /studies/{id}/patient
-    def study_patient(id)
-      handle_response(base_uri["studies/#{id}/patient"].get)
+    def patient
+      handle_response(base_uri["patient"].get)
     end
 
     # GET /studies/{id}/series
-    def study_series(id) # Retrieve all the series of this patient in a single REST call
-      handle_response(base_uri["studies/#{id}/series"].get)
+    def series # Retrieve all the series of this patient in a single REST call
+      handle_response(base_uri["series"].get)
     end
 
     # GET /studies/{id}/shared-tags
-    def study_shared_tags(id) # "?simplify" argument to simplify output
-      handle_response(base_uri["studies/#{id}/shared-tags"].get)
+    def shared_tags(params = {}) # "?simplify" argument to simplify output
+      handle_response(base_uri["shared-tags"].get({params: params}))
     end
 
     # GET /studies/{id}/statistics
-    def study_statistics(id)
-      handle_response(base_uri["studies/#{id}/statistics"].get)
+    def statistics
+      handle_response(base_uri["statistics"].get)
     end
 
-    # TODO: Polymorphic resourceType resources. Repetitive. must refactor
+    # ---------- Polymorphic resources ----------
+    # Attachments
 
     # GET /{resourceType}/{id}/attachments
-    def study_attachments(id)
-      handle_response(base_uri["studies/#{id}/attachments"].get)
+    def attachments_list # Orthanc endpoint response
+      handle_response(base_uri["attachments"].get)
     end
 
-    # DELETE /{resourceType}/{id}/attachments/{name}
-    def delete_study_attachment(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}"].delete)
+    def attachments(id = nil)
+      if id
+        return Attachment.new(base_uri, id)
+      else
+        a = []
+        handle_response(base_uri["attachments"].get).each do |id|
+          a << Attachment.new(base_uri, id)
+        end
+        return a
+      end
     end
 
-    # PUT /{resourceType}/{id}/attachments/{name}
-    def study_attachment(id, name, payload = {})
-      handle_response(base_uri["studies/#{id}/attachments/#{name}"].put(payload))
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/compressed-data
-    def study_attachment_compressed_data(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/compressed-data"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/compressed-md5
-    def study_attachment_compressed_md5(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/compressed-md5"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/compressed-size
-    def study_attachment_compressed_size(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/compressed-size"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/data
-    def study_attachment_data(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/data"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/md5
-    def study_attachment_md5(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/md5"].get)
-    end
-
-    # GET /{resourceType}/{id}/attachments/{name}/size
-    def study_attachment_size(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/size"].get)
-    end
-
-    # POST /{resourceType}/{id}/attachments/{name}/verify-md5
-    def study_attachment_verify_md5(id, name)
-      handle_response(base_uri["studies/#{id}/attachments/#{name}/verify-md5"].get)
-    end
+    # Metadata
 
     # GET /{resourceType}/{id}/metadata
-    def study_all_metadata(id)
-      handle_response(base_uri["studies/#{id}/metadata"].get)
+    def metadata_list # Orthanc endpoint response
+      handle_response(base_uri["metadata"].get)
     end
 
-    # GET /{resourceType}/{id}/metadata/{name}
-    def study_metadata(id, name)
-      handle_response(base_uri["studies/#{id}/metadata/#{name}"].get)
-    end
-
-    # DELETE /{resourceType}/{id}/metadata/{name}
-    def study_delete_metadata(id, name)
-      handle_response(base_uri["studies/#{id}/metadata/#{name}"].delete)
-    end
-
-    # PUT /{resourceType}/{id}/metadata/{name}
-    def study_update_metadata(id, name, payload = {})
-      handle_response(base_uri["studies/#{id}/metadata/#{name}"].put(payload))
+    def metadata(name = nil) # As class instances, for method chaining
+      if name
+        return Metadata.new(base_uri, name)
+      else
+        a = []
+        handle_response(base_uri["metadata"].get).each do |name|
+          a << Metadata.new(base_uri, name)
+        end
+        return a
+      end
     end
 
   end
