@@ -16,7 +16,11 @@ module Response
         parsed_response = JSON.parse(response)
 
         if parsed_response.class == Array
-          return parsed_response
+          # Normalize to an array inside a hash, so RecursiveOpenStruct can act
+          data = {}
+          data["response"] = parsed_response
+          return RecursiveOpenStruct.new(data.to_snake_keys, recurse_over_arrays: true ).response
+
         elsif parsed_response.class == Hash
           return RecursiveOpenStruct.new(parsed_response.to_snake_keys, recurse_over_arrays: true )
         else
